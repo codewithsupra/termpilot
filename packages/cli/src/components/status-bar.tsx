@@ -1,16 +1,13 @@
-import { theme } from "../theme";
+import { TextAttributes } from "@opentui/core";
 
 export function StatusBar() {
   return (
-    <box
-      flexDirection="row"
-      justifyContent="space-between"
-      width="100%"
-      height={1}
-      paddingX={2}
-    >
-      <text fg={theme.muted}>? for shortcuts</text>
-      <text fg={theme.muted}>opus 4.6</text>
+    <box flexDirection="row" gap={1}>
+      <text fg="cyan">Build</text>
+      <text attributes={TextAttributes.DIM} fg="gray">
+        ›
+      </text>
+      <text>opus-4-6</text>
     </box>
   );
 }

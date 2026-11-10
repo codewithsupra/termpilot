@@ -1,31 +1,28 @@
 import { createCliRenderer } from "@opentui/core";
 import { createRoot } from "@opentui/react";
-import { useState } from "react";
 import { Header } from "./components/header";
 import { InputBar } from "./components/input-bar";
-import { MessageList, type Message } from "./components/message-list";
-import { StatusBar } from "./components/status-bar";
 
 function App() {
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const handleSubmit = (value: string) => {
-    // TODO: send `value` to the agent and append its reply
-    setMessages((prev) => [...prev, { role: "user", text: value }]);
-  };
-
   return (
-    <box flexDirection="column" flexGrow={1} paddingX={1}>
-      <scrollbox flexGrow={1} stickyScroll stickyStart="bottom">
-        <Header />
-        <MessageList messages={messages} />
-      </scrollbox>
-
-      <InputBar onSubmit={handleSubmit} />
-      <StatusBar />
+    <box
+      alignItems="center"
+      justifyContent="center"
+      backgroundColor="#0D0D12"
+      width="100%"
+      height="100%"
+      gap={2}
+    >
+      <Header />
+      <box width="100%" maxWidth={78} paddingX={2}>
+        <InputBar onSubmit={() => {}} />
+      </box>
     </box>
   );
 }
 
-const renderer = await createCliRenderer();
+const renderer = await createCliRenderer({
+  targetFps: 60,
+  exitOnCtrlC: false,
+});
 createRoot(renderer).render(<App />);
