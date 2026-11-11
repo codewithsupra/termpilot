@@ -20,6 +20,10 @@ app.onError((error, c) => {
   return c.json({ error: "Internal server error" }, 500);
 });
 
+// Deployment: lets a host (or a load balancer) check that the server is up. No auth,
+// no database access, nothing secret in the answer.
+app.get("/health", (c) => c.json({ ok: true }));
+
 app.use("/sessions/*", requireAuth);
 app.use("/chat/*", requireAuth);
 app.use("/billing/checkout", requireAuth);
@@ -33,8 +37,11 @@ const routes = app
 
 export type AppType = typeof routes;
 // idleTimeout must be high, otherwise LLM tool calls might not complete
-// Deviation from the tutorial: bind to localhost only. This server has no login,
-// and from chapter 07 on it can run shell commands and write files for the model,
-// so it must not be reachable from other machines (Bun listens on every network
-// interface by default).
-export default { port: 3000, hostname: "127.0.0.1", fetch: app.fetch, idleTimeout: 255 };
+//
+// Deviation from the tutorial: by default the server only listens on localhost, so it is
+// not reachable from other machines (Bun listens on every network interface by default).
+// A deployment sets HOST=0.0.0.0 on purpose, and hosts such as Render set PORT.
+const port = Number(process.env.PORT) || 3000;
+const hostname = process.env.HOST ?? "127.0.0.1";
+
+export default { port, hostname, fetch: app.fetch, idleTimeout: 255 };
