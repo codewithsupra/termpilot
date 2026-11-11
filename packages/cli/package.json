@@ -1,10 +1,10 @@
 {
-  "name": "@nightcode/cli",
+  "name": "@termpilot/cli",
   "module": "src/index.tsx",
   "type": "module",
   "private": true,
   "bin": {
-    "nightcode": "./bin/nightcode"
+    "termpilot": "./bin/termpilot"
   },
   "scripts": {
     "dev": "bun run --watch src/index.tsx",
@@ -12,7 +12,7 @@
     "build": "bun build src/index.tsx --outdir dist --target bun"
   },
   "devDependencies": {
-    "@nightcode/server": "workspace:*",
+    "@termpilot/server": "workspace:*",
     "@types/bun": "1.4.4",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.186",
-    "@nightcode/shared": "workspace:*",
+    "@termpilot/shared": "workspace:*",
     "@opentui/core": "^0.1.97",
     "@opentui/react": "^0.1.97",
     "ai": "^6.0.184",

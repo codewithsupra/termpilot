@@ -1,4 +1,4 @@
-# Deploying NightCode
+# Deploying Termpilot
 
 Only the **server** is deployed. The CLI runs on each user's machine (its tools read and
 write that machine's files) and talks to the server over HTTPS.
@@ -12,7 +12,7 @@ into an image (`.dockerignore` keeps it out).
 |---|---|
 | `HOST` | `0.0.0.0` (the Dockerfile sets it). Without it the server listens on localhost only. |
 | `PORT` | Set by most hosts. Defaults to 3000. |
-| `API_URL` | The public HTTPS address of this server, for example `https://nightcode.example.com`. Used for checkout and portal return links and for the Clerk redirect. |
+| `API_URL` | The public HTTPS address of this server, for example `https://termpilot.example.com`. Used for checkout and portal return links and for the Clerk redirect. |
 | `DATABASE_URL` | Neon connection string. |
 | `GOOGLE_GENERATIVE_AI_API_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` | At least one. The free Gemini tier is rate limited and will not handle real users. |
 | `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY` | The server refuses to start without them. |
@@ -23,8 +23,8 @@ into an image (`.dockerignore` keeps it out).
 The `Dockerfile` builds a server-only image. Health check path: `/health`.
 
 ```bash
-docker build -t nightcode-server .
-docker run -p 3000:3000 --env-file <your-production-env-file> nightcode-server
+docker build -t termpilot-server .
+docker run -p 3000:3000 --env-file <your-production-env-file> termpilot-server
 ```
 
 On Render: New, Web Service, connect the repo, runtime **Docker**, health check path
@@ -43,17 +43,17 @@ cd packages/database && bunx prisma migrate deploy
 ## 4. Clerk
 
 In the Clerk OAuth application, add the redirect URI
-`<API_URL>/auth/callback` (for example `https://nightcode.example.com/auth/callback`). The
+`<API_URL>/auth/callback` (for example `https://termpilot.example.com/auth/callback`). The
 app must stay **Public** with **Require PKCE**. Use a Clerk *production* instance for real
 users.
 
 ## 5. Point the CLI at the server
 
 ```bash
-API_URL=https://nightcode.example.com nightcode
+API_URL=https://termpilot.example.com termpilot
 ```
 
-`bin/nightcode` also reads `API_URL`, `CLERK_FRONTEND_API` and `CLERK_OAUTH_CLIENT_ID` from
+`bin/termpilot` also reads `API_URL`, `CLERK_FRONTEND_API` and `CLERK_OAUTH_CLIENT_ID` from
 the repo's `.env`. A variable already set in the shell wins. Handing the CLI to other
 people still needs packaging (npm or a single binary) and baked-in defaults, because the
 bin script finds `.env` by its location in this repo.

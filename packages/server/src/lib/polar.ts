@@ -62,7 +62,7 @@ export async function createCheckoutUrl({
     products: [getPolarProductId()],
     successUrl: new URL("/billing/success", requestUrl).toString(),
     externalCustomerId: customerExternalId,
-    metadata: { source: "nightcode-cli" },
+    metadata: { source: "termpilot-cli" },
   });
 
   return result.url;

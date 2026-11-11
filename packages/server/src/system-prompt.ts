@@ -1,4 +1,4 @@
-import type { ModeType } from "@nightcode/shared";
+import type { ModeType } from "@termpilot/shared";
 
 type SystemPromptParams = {
   mode: ModeType;
