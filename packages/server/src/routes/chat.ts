@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import {
   convertToModelMessages,
+  createIdGenerator,
   streamText,
   validateUIMessages,
   type InferUITools,
@@ -123,6 +124,10 @@ const app = new Hono<AuthenticatedEnv>()
 
       return result.toUIMessageStreamResponse<NightcodeUIMessage>({
         originalMessages: nextMessages,
+        // Deviation from the tutorial: without this, a reply that has no tool calls is
+        // stored with the id "" (so two replies share one id, and Polar drops the second
+        // usage event as a duplicate). The server now names every new assistant message.
+        generateMessageId: createIdGenerator({ prefix: "msg", size: 16 }),
         messageMetadata({ part }) {
           if (part.type === "start") {
             return { mode, model };
