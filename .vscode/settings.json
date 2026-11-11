@@ -1,0 +1,3 @@
+{
+  "js/ts.tsdk.path": "packages/cli/node_modules/typescript/lib"
+}
