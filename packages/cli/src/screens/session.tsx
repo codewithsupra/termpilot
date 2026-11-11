@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router";
 import { z } from "zod";
 import { useKeyboard } from "@opentui/react";
 import prettyMs from "pretty-ms";
-import { DEFAULT_CHAT_MODEL_ID, type SupportedChatModelId } from "@nightcode/shared";
+import type { SupportedChatModelId } from "@nightcode/shared";
 import type { InferResponseType } from "hono/client";
 import { SessionShell } from "../components/session-shell";
 import { 
@@ -18,6 +18,7 @@ import { apiClient } from "../lib/api-client";
 import { getErrorMessage } from "../lib/http-errors";
 import { MessageStatus } from "@nightcode/database/enums";
 import { useKeyboardLayer } from "../providers/keyboard-layer";
+import { usePromptConfig } from "../providers/prompt-config";
 
 type SessionData = InferResponseType<(typeof apiClient.sessions)[":id"]["$get"], 200>;
 
@@ -82,6 +83,8 @@ function ChatMessage(
 function SessionChat({ session }: { session: SessionData }) {
   const [initialMessages] = useState(() => mapDbMessages(session.messages));
   const { isTopLayer } = useKeyboardLayer();
+  // Deviation from the tutorial: send with the mode and model currently selected.
+  const { mode, model } = usePromptConfig();
   const { messages, streaming, submit, abort, interrupt } = useChat(session.id, initialMessages);
 
   // Stop the pending reply when the user leaves this session.
@@ -100,7 +103,7 @@ function SessionChat({ session }: { session: SessionData }) {
   return (
     <SessionShell
       onSubmit={(text) =>
-        submit({ userText: text, mode: "BUILD", model: DEFAULT_CHAT_MODEL_ID })
+        submit({ userText: text, mode, model })
       }
       loading={streaming.status === "streaming"}
       interruptible={streaming.status === "streaming"}
