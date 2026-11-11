@@ -145,14 +145,16 @@ const app = new Hono<AuthenticatedEnv>()
         async onFinish(event) {
           if (event.isAborted) return;
 
-          if (hasPendingToolCalls(event.responseMessage)) return;
-
-          await db.session.update({
-            where: { id, userId },
-            data: {
-              messages: event.messages as unknown as Prisma.InputJsonValue,
-            },
-          });
+          // Save the conversation only once the model is really done. While a tool call
+          // is still waiting for the CLI to run it, the client sends the whole turn back.
+          if (!hasPendingToolCalls(event.responseMessage)) {
+            await db.session.update({
+              where: { id, userId },
+              data: {
+                messages: event.messages as unknown as Prisma.InputJsonValue,
+              },
+            });
+          }
 
           if (!completedUsage) return;
 
@@ -163,9 +165,14 @@ const app = new Hono<AuthenticatedEnv>()
               usage: completedUsage,
             });
 
+            // Deviation from the tutorial: bill every request, including the ones that end
+            // with a tool call (the tutorial returned before this point for those, so the
+            // tokens spent on each tool-calling step were never charged). One reply can now
+            // be several requests, so the event id also carries the number of parts, which
+            // is different for each request.
             await ingestAiUsage({
               externalCustomerId: userId,
-              eventId: `chat-message:${event.responseMessage.id}`,
+              eventId: `chat-message:${event.responseMessage.id}:${event.responseMessage.parts.length}`,
               credits: billableUsage.credits,
             });
           } catch (error) {
