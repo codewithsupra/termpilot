@@ -8,6 +8,7 @@ import {
   type SupportedProvider,
 } from "@termpilot/shared";
 import type { ProviderOptions } from "@ai-sdk/provider-utils";
+import { withModelFallback } from "./model-fallback";
 import type { LanguageModel } from "ai";
 
 type AnthropicModelId = Extract<SupportedChatModel, { provider: "anthropic" }>["id"];
@@ -72,9 +73,20 @@ function resolveOpenAIModel(modelId: OpenAIModelId): ResolvedModel {
   };
 };
 
+// Deviation from the tutorial: the Gemini free tier allows only 20 requests per day for
+// each model, and each model has its own count. When the chosen model is out of quota (or
+// overloaded) before it starts answering, the next one in this list is tried. Checked
+// against the API: gemini-3.5-flash shares gemini-3.6-flash's quota and gemini-2.5-flash is
+// closed to new keys, so neither is listed. 3.8 and 3.7 work but can be slow on free keys.
+const GEMINI_FALLBACK_ORDER = ["gemini-3.6-flash", "gemini-3.8-flash", "gemini-3.7-flash"];
+
 function resolveGoogleModel(modelId: GoogleModelId): ResolvedModel {
+  const chain = [modelId, ...GEMINI_FALLBACK_ORDER.filter((id) => id !== modelId)];
+
   return {
-    model: google(modelId),
+    // modelId stays the model the user chose, so credits are priced as that model even when
+    // a fallback answers (fallback models are not priced separately).
+    model: withModelFallback(chain.map((id) => google(id))),
     provider: "google",
     modelId,
   };
