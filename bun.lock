@@ -4,9 +4,15 @@
   "workspaces": {
     "": {
       "name": "nightcode",
+      "dependencies": {
+        "dotenv": "^17.4.2",
+      },
     },
     "packages/cli": {
       "name": "@nightcode/cli",
+      "bin": {
+        "nightcode": "./bin/nightcode",
+      },
       "dependencies": {
         "@ai-sdk/react": "^3.0.186",
         "@nightcode/shared": "workspace:*",

@@ -1,0 +1,24 @@
+#!/usr/bin/env bun
+import { readFileSync } from "fs";
+import path from "path";
+import dotenv from "dotenv";
+
+// Deviation from the tutorial: the root .env also holds the server's secrets (database,
+// model keys, Clerk and Polar secrets). The CLI only needs these three values, so load
+// only them. Anything already set in the real environment wins.
+const CLI_ENV = ["API_URL", "CLERK_FRONTEND_API", "CLERK_OAUTH_CLIENT_ID"];
+
+try {
+  const parsed = dotenv.parse(
+    readFileSync(path.resolve(import.meta.dirname, "../../../.env")),
+  );
+  for (const name of CLI_ENV) {
+    if (process.env[name] === undefined && parsed[name] !== undefined) {
+      process.env[name] = parsed[name];
+    }
+  }
+} catch {
+  // No .env next to the repo: use the real environment as it is.
+}
+
+await import("../src/index.tsx");
