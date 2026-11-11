@@ -35,4 +35,6 @@ export function findSupportedChatModel(modelId: string) {
 }
 
 // Deviation from the tutorial (which defaults to claude-opus-4-6): a model with a free tier.
-export const DEFAULT_CHAT_MODEL_ID: SupportedChatModelId = "gemini-3.8-flash";
+// gemini-3.6-flash, because gemini-3.8-flash hung or returned nothing on our free-tier key
+// (checked 2026-11-11), while 3.6 answered in a few seconds.
+export const DEFAULT_CHAT_MODEL_ID: SupportedChatModelId = "gemini-3.6-flash";
