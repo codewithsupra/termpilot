@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.68",
+    "@ai-sdk/google": "^3.0.145",
     "@ai-sdk/openai": "^3.0.52",
     "@hono/zod-validator": "^0.7.6",
     "@nightcode/database": "workspace:*",
