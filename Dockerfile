@@ -1,4 +1,4 @@
-# NightCode server image. Only the server runs here; the CLI runs on each user's machine.
+# Termpilot server image. Only the server runs here; the CLI runs on each user's machine.
 FROM oven/bun:1.4
 
 WORKDIR /app

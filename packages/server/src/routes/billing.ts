@@ -21,6 +21,6 @@ const app = new Hono<AuthenticatedEnv>()
       url: await createCustomerPortalUrl({ customerExternalId: userId, requestUrl: publicBaseUrl(c.req.url) }),
     });
   })
-  .get("/success", (c) => c.text("Done. You can close this tab and return to Nightcode."));
+  .get("/success", (c) => c.text("Done. You can close this tab and return to Termpilot."));
 
 export default app;
