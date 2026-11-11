@@ -50,7 +50,7 @@ You need [Bun](https://bun.sh), a Postgres database (a free [Neon](https://neon.
    cd packages/database && bunx prisma migrate deploy && cd ../..
    ```
 
-   In Clerk, create an OAuth application that is **Public** with **Require PKCE**, and add the redirect URI `http://localhost:3000/auth/callback`. In Polar, create a product with a Meter Credits benefit, and a meter whose filter is the event name `termpilot_usage`, aggregated as the **sum** of the `credits` property.
+   In Clerk, create an OAuth application that is **Public** with **Require PKCE**, and add the redirect URI `http://localhost:3000/auth/callback`. In Polar, create a product with a Meter Credits benefit, and a meter whose filter is the event name `termpilot_usage` (or the name you set in `POLAR_USAGE_EVENT_NAME`), aggregated as the **sum** of the `credits` property.
 
 2. Start the server and the CLI in two terminals:
 

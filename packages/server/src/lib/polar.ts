@@ -2,6 +2,13 @@ import { Polar } from "@polar-sh/sdk";
 
 type PolarServer = "sandbox" | "production";
 
+// The name of the usage event that the Polar meter counts. A meter's filter cannot be
+// edited once it has events, so an existing meter keeps its old event name through
+// POLAR_USAGE_EVENT_NAME. New setups use the default and create the meter with it.
+function getUsageEventName() {
+  return process.env.POLAR_USAGE_EVENT_NAME || "termpilot_usage";
+}
+
 function getRequiredEnv(name: string) {
   const value = process.env[name];
   if (!value) {
@@ -123,7 +130,7 @@ export async function ingestAiUsage({
   await polar.events.ingest({
     events: [
       {
-        name: "termpilot_usage",
+        name: getUsageEventName(),
         externalId: eventId,
         externalCustomerId,
         metadata: { credits },
