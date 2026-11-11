@@ -1,4 +1,5 @@
 import { resolve, relative } from "path";
+import { isInsideDirectory } from "./path-guard";
 import { readFile, writeFile } from "fs/promises";
 import { tool } from "ai";
 import { z } from "zod";
@@ -17,7 +18,7 @@ export function createEditFileTool(cwd: string) {
     execute: async ({ path, oldString, newString }) => {
       const resolved = resolve(cwd, path);
 
-      if (!resolved.startsWith(cwd)) {
+      if (!isInsideDirectory(cwd, resolved)) {
         return { error: "Path is outside the project directory" };
       }
 

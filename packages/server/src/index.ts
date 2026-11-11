@@ -21,4 +21,8 @@ const routes = app.route("/sessions", sessions).route("/chat", chat);
 
 export type AppType = typeof routes;
 // idleTimeout must be high, otherwise LLM tool calls might not complete
-export default { port: 3000, fetch: app.fetch, idleTimeout: 255 };
+// Deviation from the tutorial: bind to localhost only. This server has no login,
+// and from chapter 07 on it can run shell commands and write files for the model,
+// so it must not be reachable from other machines (Bun listens on every network
+// interface by default).
+export default { port: 3000, hostname: "127.0.0.1", fetch: app.fetch, idleTimeout: 255 };

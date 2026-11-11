@@ -1,4 +1,5 @@
 import { resolve, relative } from "path";
+import { isInsideDirectory } from "./path-guard";
 import { tool } from "ai";
 import { z } from "zod";
 
@@ -22,7 +23,7 @@ export function createGrepTool(cwd: string) {
     execute: async ({ pattern, path, include }) => {
       const resolved = resolve(cwd, path);
 
-      if (!resolved.startsWith(cwd)) {
+      if (!isInsideDirectory(cwd, resolved)) {
         return { error: "Path is outside the project directory" };
       }
 

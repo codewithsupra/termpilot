@@ -1,4 +1,5 @@
 import { resolve, relative } from "path";
+import { isInsideDirectory } from "./path-guard";
 import { readFile } from "fs/promises";
 import { tool } from "ai";
 import { z } from "zod";
@@ -24,7 +25,7 @@ export function createReadFileTool(cwd: string) {
       }
 
       // Ensure resolved path is still within cwd
-      if (!resolved.startsWith(cwd)) {
+      if (!isInsideDirectory(cwd, resolved)) {
         return { error: "Path is outside the project directory" };
       }
 

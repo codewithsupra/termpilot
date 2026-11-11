@@ -1,4 +1,5 @@
 import { resolve, relative, join } from "path";
+import { isInsideDirectory } from "./path-guard";
 import { readdir, stat } from "fs/promises";
 import { tool } from "ai";
 import { z } from "zod";
@@ -16,7 +17,7 @@ export function createListDirectoryTool(cwd: string) {
     execute: async ({ path }) => {
       const resolved = resolve(cwd, path);
 
-      if (!resolved.startsWith(cwd)) {
+      if (!isInsideDirectory(cwd, resolved)) {
         return { error: "Path is outside the project directory" };
       }
 
