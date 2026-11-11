@@ -12,6 +12,7 @@
         "@nightcode/shared": "workspace:*",
         "@opentui/core": "^0.1.97",
         "@opentui/react": "^0.1.97",
+        "date-fns": "^4.1.0",
         "eventsource-parser": "^3.0.6",
         "hono": "^4.12.12",
         "opentui-spinner": "^0.0.6",
@@ -44,7 +45,7 @@
       "name": "@nightcode/server",
       "dependencies": {
         "@ai-sdk/anthropic": "^3.0.68",
-        "@ai-sdk/google": "3.0.145",
+        "@ai-sdk/google": "^3.0.145",
         "@ai-sdk/openai": "^3.0.52",
         "@hono/zod-validator": "^0.7.6",
         "@nightcode/database": "workspace:*",
@@ -344,6 +345,8 @@
     "d3-time": ["d3-time@3.1.0", "", { "dependencies": { "d3-array": "2 - 3" } }, "sha512-VqKjzBLejbSMT4IgbmVgDjpkYrNWUYJnbCGo874u7MMKIWsILRX+OpX/gTk8MqjpT1A/c6HY2dCA77ZN0lkQ2Q=="],
 
     "d3-time-format": ["d3-time-format@4.1.0", "", { "dependencies": { "d3-time": "1 - 3" } }, "sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg=="],
+
+    "date-fns": ["date-fns@4.4.0", "", {}, "sha512-+1UMbeh68lH1SegH83CGWwpb6OHHbpSgr3+s5Eww5M4CAgswBpoWS0AjTOfEJ33HiYKz1hdj/KTFprzXHmq/6w=="],
 
     "deepmerge-ts": ["deepmerge-ts@8.0.2", "", {}, "sha512-uqbvqLUMrc6p0MO+WBRtTxY55hmyh94WRwI5a++PZe54X+bfVh59FSN7uWCBCW1CCVjzjnrwzfI8zidE2obMMw=="],
 
