@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useRef } from "react";
 import { z } from "zod";
+import { Mode } from "@nightcode/database/enums";
 import { useNavigate, useLocation } from "react-router";
 import { SessionShell } from "../components/session-shell";
 import { UserMessage } from "../components/messages";
 import { useToast } from "../providers/toast";
-import { usePromptConfig } from "../providers/prompt-config";
 import { apiClient } from "../lib/api-client";
 import { getErrorMessage } from "../lib/http-errors";
 
 const newSessionStateSchema = z.object({
   message: z.string(),
+  mode: z.enum(Mode),
+  model: z.string(),
 });
 
 export function NewSession() {
@@ -17,13 +19,6 @@ export function NewSession() {
   const location = useLocation();
   const toast = useToast();
   const hasStartedRef = useRef(false);
-
-  // Deviation from the tutorial: use the mode and model the user picked on Home.
-  // Held in a ref so the one-shot create effect below reads the latest values
-  // without listing them as dependencies (a change must not cancel the request).
-  const { mode, model } = usePromptConfig();
-  const configRef = useRef({ mode, model });
-  configRef.current = { mode, model };
 
   const state = useMemo(() => {
     const parsed = newSessionStateSchema.safeParse(location.state);
@@ -53,8 +48,8 @@ export function NewSession() {
             initialMessage: {
               role: "USER",
               content: state.message,
-              mode: configRef.current.mode,
-              model: configRef.current.model,
+              mode: state.mode,
+              model: state.model,
             },
           },
         });
@@ -88,7 +83,7 @@ export function NewSession() {
 
   return (
     <SessionShell onSubmit={() => {}} inputDisabled loading>
-      <UserMessage message={state.message} />
+      <UserMessage message={state.message} mode={state.mode} />
     </SessionShell>
   );
 };
