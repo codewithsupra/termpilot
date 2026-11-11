@@ -20,6 +20,31 @@ function resolveInsideCwd(path: string) {
   return { cwd, resolved };
 }
 
+// Deviation from the tutorial: these variables belong to the server (database, model
+// providers, Clerk secrets, Polar, JWT). The CLI process can end up with them because
+// Bun loads the root .env, and the bash tool would hand them to every command the model
+// runs, so the model could read them with `env` and they would go back to the provider.
+const SERVER_ONLY_ENV = [
+  "DATABASE_URL",
+  "ANTHROPIC_API_KEY",
+  "OPENAI_API_KEY",
+  "GOOGLE_GENERATIVE_AI_API_KEY",
+  "CLERK_SECRET_KEY",
+  "CLERK_OAUTH_CLIENT_SECRET",
+  "CLERK_PUBLISHABLE_KEY",
+  "JWT_SECRET",
+  "POLAR_ACCESS_TOKEN",
+  "POLAR_PRODUCT_ID",
+  "POLAR_SERVER",
+  "POLAR_CREDITS_METER_ID",
+];
+
+function commandEnv() {
+  const env: Record<string, string | undefined> = { ...process.env, TERM: "dumb" };
+  for (const name of SERVER_ONLY_ENV) delete env[name];
+  return env;
+}
+
 function truncate(value: string, limit: number) {
   return value.length > limit
     ? `${value.slice(0, limit)}\n... (truncated, ${value.length} total chars)`
@@ -149,7 +174,7 @@ export async function executeLocalTool(toolName: string, input: unknown, mode: M
         cwd: resolveInsideCwd(".").resolved,
         stdout: "pipe",
         stderr: "pipe",
-        env: { ...process.env, TERM: "dumb" },
+        env: commandEnv(),
       });
       const timer = setTimeout(() => proc.kill(), timeout);
       const [stdout, stderr] = await Promise.all([
